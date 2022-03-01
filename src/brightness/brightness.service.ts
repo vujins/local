@@ -23,7 +23,7 @@ export class BrightnessService {
 
   /** This will convert sunlight value (0-83000 lux) to brightness 0-100 */
   private getBrightness(sunlight: number) {
-    const sigmoid = this.getSigmoid(sunlight / 60);
+    const sigmoid = this.getSigmoid(sunlight / 100);
 
     // sigmoid(0) = 0.5
     // (sigmoid(x/usporenje) - 0.5)*200 - 100 je max

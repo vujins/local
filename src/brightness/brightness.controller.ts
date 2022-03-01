@@ -8,7 +8,6 @@ export class BrightnessController {
   @Post()
   async setBrightness(@Body('sunlight') sunlight: string) {
     const sunlightValue = Number.parseInt(sunlight);
-
     if (!sunlightValue) return { brightness: 0 };
 
     const brightness = await this.brightnessService.setBrightness(
@@ -16,6 +15,9 @@ export class BrightnessController {
       sunlightValue,
     );
 
+    console.log(
+      `Running setBrightness: ${brightness}/${sunlight} (brightness/sunlight)`,
+    );
     return { brightness };
   }
 }
