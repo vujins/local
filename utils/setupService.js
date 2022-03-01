@@ -6,9 +6,9 @@ const path = require('path');
 const svc = new Service({
   name: 'Hassio Local Server',
   description: 'NestJS server that executes Hassio requests.',
-  script: path.join(__dirname, 'dist/main.js'),
+  script: path.join(__dirname, '../dist/main.js'),
   nodeOptions: ['--harmony', '--max_old_space_size=4096'],
-  workingDirectory: path.join(__dirname, 'src'),
+  workingDirectory: path.join(__dirname, '../src'),
   //, allowServiceLogon: true
 });
 
