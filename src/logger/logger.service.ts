@@ -9,11 +9,17 @@ export class LoggerService {
     return this.log(msg, 'INFO');
   }
 
-  error(msg): Promise<void> {
+  warn(msg: string): Promise<void> {
+    return this.log(msg, 'WARNING');
+  }
+
+  error(msg: string): Promise<void> {
     return this.log(msg, 'ERROR');
   }
 
   private log(msg: string, level: string): Promise<void> {
+    if (!msg) return;
+
     const curremtMoment = moment();
     const logFilePath = path.join(__dirname, '../../logs', `${curremtMoment.format('yyyy-MM-DD')}.log`);
 

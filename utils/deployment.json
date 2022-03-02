@@ -1,0 +1,11 @@
+{
+  "uid": "localserver",
+  "append": true,
+  "watch": false,
+  "path": "C:/Users/svujin/repos/local/dist",
+  "script": "main.js",
+  "sourceDir": "C:/Users/svujin/repos/local/dist",
+  "logFile": "../logs/forever.log",
+  "outFile": "../logs/out.log",
+  "errFile": "../logs/error.log"
+}

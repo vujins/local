@@ -6,7 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "deploy": "yarn build & node utils/setupService.js",
+    "deploy": "forever start ./utils/deployment.json",
+    "stop": "forever stop localserver",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"*.js\"",

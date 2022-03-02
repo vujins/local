@@ -18,4 +18,8 @@ const svc = new Service({
 //   svc.uninstall();
 // });
 
-svc.stop();
+svc.on('uninstall', () => {
+  console.log('Service uninstalled!');
+});
+
+svc.uninstall();
