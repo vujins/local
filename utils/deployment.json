@@ -7,5 +7,7 @@
   "sourceDir": "C:/Users/svujin/repos/local/dist",
   "logFile": "../logs/forever.log",
   "outFile": "../logs/out.log",
-  "errFile": "../logs/error.log"
+  "errFile": "../logs/error.log",
+  "minUpTime": 100000,
+  "spinSleepTime": 100000
 }

@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { LoggerService } from '../logger/logger.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { HassioService } from '../hassio/hassio.service';
 
 @Injectable()
 export class BrightnessService {
   private readonly execute = promisify(exec);
 
-  constructor(private readonly loggerService: LoggerService) {}
+  constructor(private readonly loggerService: LoggerService, private readonly hassioService: HassioService) {}
 
-  async setBrightness(monitor: number, sunlight: number): Promise<number> {
+  public async setBrightness(monitor: number, sunlight: number): Promise<number> {
     const brightness = this.getBrightness(sunlight);
 
     const cmd = `DMT "DMT:General:ChangeBrightness ${monitor}:${brightness}"`;
@@ -17,6 +19,7 @@ export class BrightnessService {
 
     this.loggerService.warn(stdout);
     this.loggerService.warn(stderr);
+    this.loggerService.info(`Setting brightness ${brightness} for monitor ${monitor}!`);
 
     return brightness;
   }
@@ -32,5 +35,14 @@ export class BrightnessService {
 
   private getSigmoid(z: number) {
     return 1 / (1 + Math.exp(-z));
+  }
+
+  @Cron(CronExpression.EVERY_30_SECONDS, { name: 'sunlightJob' })
+  private async querySunlightCron() {
+    const sunlight = await this.hassioService.getSunlight();
+
+    this.setBrightness(1, sunlight);
+    this.setBrightness(2, sunlight);
+    this.setBrightness(3, sunlight);
   }
 }
