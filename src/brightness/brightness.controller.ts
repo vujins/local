@@ -1,32 +1,48 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { HassioService } from '../hassio/hassio.service';
 import { LoggerService } from '../logger/logger.service';
 import { BrightnessService } from './brightness.service';
 
 @Controller('brightness')
 export class BrightnessController {
-  constructor(private readonly brightnessService: BrightnessService, private readonly loggerService: LoggerService) {
+  shouldRunInterval = true;
+
+  constructor(
+    private readonly brightnessService: BrightnessService,
+    private readonly hassioService: HassioService,
+    private readonly loggerService: LoggerService,
+  ) {
     this.loggerService.info('Starting brightness controller.');
   }
 
-  @Post()
-  async setBrightness(@Body('sunlight') sunlight: string) {
-    this.loggerService.info(`Starting setBrightness with sunlight level: ${sunlight}.`);
+  @Get()
+  public stopInterval() {
+    this.shouldRunInterval = false;
+  }
 
-    try {
-      const sunlightValue = Number.parseInt(sunlight);
-      if (!Number.isInteger(sunlightValue)) {
-        this.loggerService.warn(`Sunlight value is not a number: ${sunlight} (${sunlightValue})`);
-        return { brightness: 0 };
-      }
+  @Get()
+  public startInterval() {
+    this.shouldRunInterval = true;
+  }
 
-      const brightness = await this.brightnessService.setBrightness(1, sunlightValue);
+  @Get()
+  public toggleInterval() {
+    this.shouldRunInterval = !this.shouldRunInterval;
+  }
 
-      this.loggerService.info(`Running setBrightness: ${brightness}/${sunlight} (brightness/sunlight)`);
-      return { brightness };
-    } catch (err) {
-      this.loggerService.error(err);
+  @Cron(CronExpression.EVERY_30_SECONDS, { name: 'sunlightJob' })
+  private async querySunlightCron() {
+    this.loggerService.info(`Running sunlight interval job. Skipping: ${!this.shouldRunInterval}`);
 
-      return { brightness: 'error' };
-    }
+    if (!this.shouldRunInterval) return;
+
+    const sunlight = await this.hassioService.getSunlight();
+
+    this.loggerService.info(`Got sunlight from hassio: ${sunlight}`);
+
+    this.brightnessService.setBrightness(1, sunlight);
+    this.brightnessService.setBrightness(2, sunlight);
+    this.brightnessService.setBrightness(3, sunlight);
   }
 }

@@ -10,9 +10,15 @@ export class HassioService {
   }
 
   private async getState(entity: string) {
+    const token = process.env.HASSIO_TOKEN;
+    // if the token is wrong, hassio will ban my user because of failed attepmts
+    if (!token) {
+      return 0;
+    }
+
     const response = await axios.get(`https://nesty.duckdns.org/api/states/${entity}`, {
       headers: {
-        Authorization: `Bearer ${process.env.HASSIO_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'appliaction/json',
       },
     });
