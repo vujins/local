@@ -23,6 +23,8 @@ export class LoggerService {
     const curremtMoment = moment();
     const logFilePath = path.join(__dirname, '../../logs', `${curremtMoment.format('yyyy-MM-DD')}.log`);
 
+    console.log(`${curremtMoment.format('DD/MM/yyyy, hh:mm:ss')} ${level}: ${msg}`);
+
     return fs.appendFile(logFilePath, `[${curremtMoment.format('DD/MM/yyyy, hh:mm:ss')}] ${level} ${msg}\n`);
   }
 }

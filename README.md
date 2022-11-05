@@ -29,34 +29,43 @@
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn run start
 
 # watch mode
-$ npm run start:dev
+$ yarn run start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ yarn run test
 
 # e2e tests
-$ npm run test:e2e
+$ yarn run test:e2e
 
 # test coverage
-$ npm run test:cov
+$ yarn run test:cov
 ```
+
+## Setup local server as a Windows service
+
+1. $ npm i -g forever
+1. Go to https://homeassistant.local:8123/profile
+1. Create a Long-Lived access token
+1. Paste it in .env as `HASSIO_TOKEN=eyJ0e...`
+1. Open Win+R, and go to `shell:startup`
+1. Create a shortcut of `./utils/startLocalServer.ps1` in the startup folder
 
 ## Support
 

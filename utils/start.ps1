@@ -1,1 +1,0 @@
-forever start ./deployment.json
